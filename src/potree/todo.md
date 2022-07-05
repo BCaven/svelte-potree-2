@@ -1,0 +1,1 @@
+Replace all mentions of jquerry with window.$
