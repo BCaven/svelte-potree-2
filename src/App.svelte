@@ -23,44 +23,6 @@
   */
 
 
-  import { onMount } from 'svelte';
-
-  import * as THREE from 'three';
-
-  let canvas: HTMLCanvasElement;
-
-  onMount(() => {
-    
-    let gl = canvas.getContext('webgl', {
-      alpha: true,
-			depth: true,
-			stencil: false,
-			antialias: false,
-			//premultipliedAlpha: _premultipliedAlpha,
-			preserveDrawingBuffer: true,
-			powerPreference: "high-performance",
-    });
-
-    gl.getExtension('EXT_frag_depth');
-		gl.getExtension('WEBGL_depth_texture');
-		gl.getExtension('WEBGL_color_buffer_float')
-
-		let extVAO = gl.getExtension('OES_vertex_array_object');
-    
-    let renderer = new THREE.WebGLRenderer({
-      alpha: true,
-      premultipliedAlpha: false,
-			canvas: canvas,
-			context: gl,
-      failIfMajorPerformanceCaveat: true
-    });
-
-
-
-
-
-  });
-
 </script>
 
 <main>
