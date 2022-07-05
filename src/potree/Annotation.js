@@ -39,7 +39,7 @@ export class Annotation extends EventDispatcher {
 		this._display = true;
 		this._expand = false;
 		this.collapseThreshold = [args.collapseThreshold, 100].find(e => e !== undefined);
-
+ 
 		this.children = [];
 		this.tags = []; // added functionality to incorporate tags into the annotation framework
 		this.parent = null;
