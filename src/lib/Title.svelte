@@ -34,7 +34,7 @@
 </Container>
 
 <Container class="mx-auto" style="padding-top: 5px">
-    <ListGroup style="overflow: scroll">
+    <ListGroup class="overflow-auto"> <!--overflow-auto gives this list a scrollbar if it overflows but not if it doesn't-->
         {#each maps as map}
             <ListGroupItem>
                 <Row>
