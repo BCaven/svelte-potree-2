@@ -1,5 +1,5 @@
 <script>
-    import {Container, Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, 
+    import {Container, Row, Col, Button, 
             ListGroup, ListGroupItem, Styles} from 'sveltestrap';
     import Map from './Map.svelte';
 
@@ -33,17 +33,17 @@
     </Row>
 </Container>
 
-<Container style="padding-top: 5px; margin-x: auto">
-    <ListGroup>
+<Container class="mx-auto" style="padding-top: 5px">
+    <ListGroup style="overflow: scroll">
         {#each maps as map}
             <ListGroupItem>
                 <Row>
-                    <Col sm="8">{map.name}</Col>
+                    <Col sm="8" class="text-start my-auto">{map.name}</Col>
                     <Col sm="2">
-                        <button on:click={() => mapIndex = map.index}>View Map</button>
+                        <Button on:click={() => mapIndex = map.index}>View Map</Button>
                     </Col>
                     <Col sm="2">
-                        <button>Edit Map</button>
+                        <Button>Edit Map</Button>
                     </Col>
                 </Row>
             </ListGroupItem>
