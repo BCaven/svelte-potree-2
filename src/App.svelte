@@ -31,15 +31,17 @@
   */
 
 //import PotreeViewer from "./PotreeViewer.svelte";
-  import Title from "./lib/Title.svelte"; // change these
+  	import Title from "./lib/Title.svelte"; // change these
 	import Map from "./lib/Map.svelte";
 	import Info from "./lib/Info.svelte";
+	import { MapData } from "./lib/MapData.js";
+
 	let mapIndex = -1; // -1 means home page
 	let infoId = 0;
 	let maps = [ // these are place-holders, will need to change them to jsons for the actual thing
-		"http://127.0.0.1:5500/Potree/potree-1.8/examples/cesium_ca13.html",
-		"http://127.0.0.1:5500/Potree/potree-1.8/examples/cesium_ca13.html",
-		"http://127.0.0.1:5500/Potree/potree-1.8/examples/cesium_sorvilier.html"
+		new MapData("Example 1", 0, null, "http://127.0.0.1:5500/Potree/potree-1.8/examples/cesium_ca13.html"),
+		new MapData("Example 2", 1, null, "http://127.0.0.1:5500/Potree/potree-1.8/examples/cesium_ca13.html"),
+		new MapData("Example 3", 2, null, "http://127.0.0.1:5500/Potree/potree-1.8/examples/cesium_sorvilier.html")
 		
 	];
 	let infos = [
@@ -61,7 +63,7 @@
 		<Title {map} bind:mapIndex/>
 	{:else}
 		{#if !showInfo}
-			<Map map = {map} bind:infoId bind:showInfo bind:start/>
+			<Map map = {maps} bind:infoId bind:showInfo bind:mapIndex/>
 		{/if}
 	{/if}
 
