@@ -1,5 +1,6 @@
 <script>
-    import {Container, Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Styles} from 'sveltestrap';
+    import {Container, Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, 
+            ListGroup, ListGroupItem, Styles} from 'sveltestrap';
     import Map from './Map.svelte';
 
     export let mapIndex = -1;
@@ -26,24 +27,43 @@
         </Col>
     </Row>
     <Row style="height: 8vh">
-        <Col cols="12" class="my-auto">
+        <Col sm="12" class="my-auto">
             <p1>You could put a bunch of text right here to describe the project.</p1>
         </Col>
     </Row>
 </Container>
-<br/>
 
-<Dropdown triggerElement={selectedMap}>
+<Container style="padding-top: 5px; margin-x: auto">
+    <ListGroup>
+        {#each maps as map}
+            <ListGroupItem>
+                <Row>
+                    <Col sm="8">{map.name}</Col>
+                    <Col sm="2">
+                        <button on:click={() => mapIndex = map.index}>View Map</button>
+                    </Col>
+                    <Col sm="2">
+                        <button>Edit Map</button>
+                    </Col>
+                </Row>
+            </ListGroupItem>
+        {/each}
+    </ListGroup>
+</Container>
+
+<!-- <Dropdown triggerElement={selectedMap}>
     <DropdownToggle caret>{label}</DropdownToggle>
     <DropdownMenu>
         {#each maps as map}
             <DropdownItem on:click = {() => selectedMap = map}>{map.name}</DropdownItem>
         {/each}
     </DropdownMenu>
-</Dropdown>
+</Dropdown> -->
 <!-- these lines above make the dropdown. Idk why it requires so many different elements, but this is how it must
     be done using sveltestrap.-->
 
-{#if selectedMap}
+<!-- {#if selectedMap}
     <button on:click= {() => mapIndex = selectedMap.index}>Go to Map</button>
-{/if}
+{/if} -->
+
+
