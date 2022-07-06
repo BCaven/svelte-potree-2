@@ -1,21 +1,35 @@
 <script>
-    import {Dropdown, DropdownToggle, DropdownItem} from 'sveltestrap';
+    import {Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Styles} from 'sveltestrap';
     import Map from './Map.svelte';
 
     export let mapIndex = -1;
     export let maps = [];
 
-    let selectedMap = maps[0];
+    let selectedMap = null;
+    let label = "Select a Map"
+    $: if (selectedMap){
+        label = selectedMap.name
+    } else {
+        label = "Select a Map"
+    }
 </script>
 
-<p1> Choose a map </p1>
+<Styles />
+<!-- Styles must be here in order for sveltestrap components to work -->
+
 <br/>
 
 <Dropdown triggerElement={selectedMap}>
-    <DropdownToggle caret>{selectedMap.name}</DropdownToggle>
-    {#each maps as map}
-        <DropdownItem>{map.name}</DropdownItem>
-    {/each}
+    <DropdownToggle caret>{label}</DropdownToggle>
+    <DropdownMenu>
+        {#each maps as map}
+            <DropdownItem on:click = {() => selectedMap = map}>{map.name}</DropdownItem>
+        {/each}
+    </DropdownMenu>
 </Dropdown>
+<!-- these lines above make the dropdown. Idk why it requires so many different elements, but this is how it must
+    be done using sveltestrap.-->
 
-<button on:click= {() => mapIndex = selectedMap.index}>Go to Map</button>
+{#if selectedMap}
+    <button on:click= {() => mapIndex = selectedMap.index}>Go to Map</button>
+{/if}
