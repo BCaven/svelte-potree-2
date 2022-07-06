@@ -32,6 +32,7 @@
 
 //import PotreeViewer from "./PotreeViewer.svelte";
   	import Title from "./lib/Title.svelte"; // change these
+	import Test from "./lib/Test.svelte";
 	import Map from "./lib/Map.svelte";
 	import Info from "./lib/Info.svelte";
 	import { MapData } from "./lib/MapData.js";
@@ -48,9 +49,9 @@
 		"example info 1",
 		"example info 2"
 	];
-	let showInfo = false;
-	$: map = maps[mapIndex]; 
-	$: info = infos[infoId];
+	// let showInfo = false;
+	// $: map = maps[mapIndex]; 
+	// $: info = infos[infoId];
 	
 	
 </script>
@@ -60,16 +61,17 @@
 	
 	
 	{#if mapIndex < 0}
-		<Title {map} bind:mapIndex/>
+		<Title bind:mapIndex bind:maps/>
 	{:else}
-		{#if !showInfo}
+		<Test bind:mapIndex bind:map={maps[mapIndex]}/> <!--Bruh bind rly be wild-->
+		<!-- {#if !showInfo}
 			<Map map = {maps} bind:infoId bind:showInfo bind:mapIndex/>
-		{/if}
+		{/if} -->
 	{/if}
 
-	{#if showInfo} <!-- could totally put this in the map file... but it feels better to have it all controlled by the app-->
+	<!-- {#if showInfo} could totally put this in the map file... but it feels better to have it all controlled by the app
 		<Info {info} bind:showInfo/>
-	{/if}
+	{/if} -->
 </main>
 
 <style>
