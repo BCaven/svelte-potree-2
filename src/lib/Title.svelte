@@ -20,8 +20,15 @@
 <!-- <div color="#808080" style="position: absolute; margin: 0; height: 20vh; width: 100vw; color: #808080"/> -->
 
 <Container style="margin: 0; padding: 0; max-width: none; background-color: #808080">
-    <Row style="height: 20vh">
-        <Col cols="12">Title</Col>
+    <Row style="height: 8vh">
+        <Col cols="12" class="my-auto">
+            <h1>Title</h1>
+        </Col>
+    </Row>
+    <Row style="height: 8vh">
+        <Col cols="12" class="my-auto">
+            <p1>You could put a bunch of text right here to describe the project.</p1>
+        </Col>
     </Row>
 </Container>
 <br/>
