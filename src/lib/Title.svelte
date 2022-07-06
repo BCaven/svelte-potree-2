@@ -1,5 +1,5 @@
 <script>
-    import {Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Styles} from 'sveltestrap';
+    import {Container, Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Styles} from 'sveltestrap';
     import Map from './Map.svelte';
 
     export let mapIndex = -1;
@@ -17,6 +17,13 @@
 <Styles />
 <!-- Styles must be here in order for sveltestrap components to work -->
 
+<!-- <div color="#808080" style="position: absolute; margin: 0; height: 20vh; width: 100vw; color: #808080"/> -->
+
+<Container style="margin: 0; padding: 0; max-width: none; background-color: #808080">
+    <Row style="height: 20vh">
+        <Col cols="12">Title</Col>
+    </Row>
+</Container>
 <br/>
 
 <Dropdown triggerElement={selectedMap}>
