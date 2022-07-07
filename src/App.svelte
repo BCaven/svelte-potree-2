@@ -31,11 +31,12 @@
   */
 
 //import PotreeViewer from "./PotreeViewer.svelte";
-  	import Title from "./lib/Title.svelte"; // change these
-	import Test from "./lib/Test.svelte";
-	import Map from "./lib/Map.svelte";
-	import Info from "./lib/Info.svelte";
-	import { MapData } from "./lib/MapData.js";
+  	import Title from "./views/Title.svelte"; // change these
+	import Test from "./views/Test.svelte";
+	import Map from "./views/Map.svelte";
+	import Info from "./views/Info.svelte";
+	import { MapData } from "./classes/MapData.js";
+	import PotreeViewer from "./views/Potree.svelte";
 
 	let mapIndex = -1; // -1 means home page
 	let infoId = 0;
@@ -65,7 +66,8 @@
 	{#if mapIndex < 0}
 		<Title bind:mapIndex bind:maps/>
 	{:else}
-		<Test bind:mapIndex bind:map={maps[mapIndex]}/> <!--Bruh bind rly be wild-->
+		<PotreeViewer/>
+		<!-- <Test bind:mapIndex bind:map={maps[mapIndex]}/> -->
 		<!-- {#if !showInfo}
 			<Map map = {maps} bind:infoId bind:showInfo bind:mapIndex/>
 		{/if} -->
