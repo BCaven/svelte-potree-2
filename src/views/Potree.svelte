@@ -1,406 +1,247 @@
-<body>
-	<script src="../libs/jquery/jquery-3.1.1.min.js"></script>
-	<script src="../libs/spectrum/spectrum.js"></script>
-	<script src="../libs/jquery-ui/jquery-ui.min.js"></script>
-	
-	
-	<script src="../libs/other/BinaryHeap.js"></script>
-	<script src="../libs/tween/tween.min.js"></script>
-	<script src="../libs/d3/d3.js"></script>
-	<script src="../libs/proj4/proj4.js"></script>
-	<script src="../libs/openlayers3/ol.js"></script>
-	<script src="../libs/i18next/i18next.js"></script>
-	<script src="../libs/jstree/jstree.js"></script>
-	<script src="../build/potree/potree.js"></script>
-	<script src="../libs/plasio/js/laslaz.js"></script>
+<head>
+	<meta charset="utf-8">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	<title>Potree Viewer</title>
 
+	<link rel="stylesheet" type="text/css" href="../build/potree/potree.css">
+	<link rel="stylesheet" type="text/css" href="../libs/jquery-ui/jquery-ui.min.css">
+	<link rel="stylesheet" type="text/css" href="../libs/openlayers3/ol.css">
+	<link rel="stylesheet" type="text/css" href="../libs/spectrum/spectrum.css">
+	<link rel="stylesheet" type="text/css" href="../libs/jstree/themes/mixed/style.css">
+	<link rel="stylesheet" type="text/css" href="../libs/Cesium/Widgets/CesiumWidget/CesiumWidget.css">
+</head>
+
+<body>
+	<!-- INCLUDE ADDITIONAL DEPENDENCIES HERE -->
+	<!-- INCLUDE SETTINGS HERE -->
+	
 	<div class="potree_container" style="position: absolute; width: 100%; height: 100%; left: 0px; top: 0px; ">
+		
 		<div id="potree_render_area" style="background-image: url('../build/potree/resources/images/background.jpg');">
+			<div id="cesiumContainer" style="position: absolute; width: 100%; height: 100%; background-color:green"></div>
 		</div>
+		<div id="potree_sidebar_container"> </div>
 	</div>
+
 </body>
 
 <script>
-    import * as THREE from "../libs/three.js/build/three.module.js";
-	import { PLYLoader } from "../libs/three.js/loaders/PLYLoader.js";
-
-    // export let annotations = [];
-    // export let map = "default";
-
-    //This is all copied from chase
-
-    window.viewer = new Potree.Viewer(document.getElementById("potree_render_area"));
-	const loader = new PLYLoader();
+    // src="../libs/jquery/jquery-3.1.1.min.js"
+	// src="../libs/spectrum/spectrum.js"
+	// src="../libs/jquery-ui/jquery-ui.min.js"
+	// src="../libs/other/BinaryHeap.js"
+	// src="../libs/tween/tween.min.js"
+	// src="../libs/d3/d3.js"
+	// src="../libs/proj4/proj4.js"
+	// src="../libs/openlayers3/ol.js"
+	// src="../libs/i18next/i18next.js"
+	// src="../libs/jstree/jstree.js"
+	// src="../libs/plasio/js/laslaz.js"
+	// src="../libs/Cesium/Cesium.js"
+    import * as Potree from '../build/potree/Potree.js';
+	import * as THREE from 'three';
 	
-	viewer.setEDLEnabled(true);
-	viewer.setFOV(60);
-	viewer.setPointBudget(1_000_000);
-	viewer.loadSettingsFromURL();
-	// viewer.light
-	
-	viewer.setDescription("");
-
-	viewer.scene.view.position.set(100,210,0);
-	viewer.scene.view.lookAt(new THREE.Vector3(100,210,0));
-	
-	viewer.loadGUI(() => {
-		viewer.setLanguage('en');
-		_("#menu_appearance").next().show(); //I am not sure that this is right. This underscore used to be a $ but idk what that did
-		//viewer.toggleSidebar();
+	// window.cesiumViewer = new Cesium.Viewer('cesiumContainer', {
+	// 	useDefaultRenderLoop: false,
+	// 	animation: false,
+	// 	baseLayerPicker : false,
+	// 	fullscreenButton: false, 
+	// 	geocoder: false,
+	// 	homeButton: false,
+	// 	infoBox: false,
+	// 	sceneModePicker: false,
+	// 	selectionIndicator: false,
+	// 	timeline: false,
+	// 	navigationHelpButton: false,
+	// 	imageryProvider : Cesium.createOpenStreetMapImageryProvider({url : 'https://a.tile.openstreetmap.org/'}),
+	// 	terrainShadows: Cesium.ShadowMode.DISABLED,
+	// });
+	// let cp = new Cesium.Cartesian3(4303414.154026048, 552161.235598733, 4660771.704035539);
+	// cesiumViewer.camera.setView({
+	// 	destination : cp,
+	// 	orientation: {
+	// 		heading : 10, 
+	// 		pitch : -Cesium.Math.PI_OVER_TWO * 0.5, 
+	// 		roll : 0.0 
+	// 	}
+	// });
+	window.potreeViewer = new Potree.Viewer(document.getElementById("potree_render_area"), {
+		useDefaultRenderLoop: false
+	});
+	potreeViewer.setEDLEnabled(true);
+	potreeViewer.setFOV(60);
+	potreeViewer.setPointBudget(3_000_000);
+	potreeViewer.setMinNodeSize(50);
+	potreeViewer.loadSettingsFromURL();
+	potreeViewer.setBackground(null);
+	potreeViewer.useHQ = true;
+	potreeViewer.setDescription(`
+		Potree using <a href="https://cesiumjs.org/" target="_blank">Cesium</a> to display an 
+		<a href="https://www.openstreetmap.org" target="_blank">OpenStreetMap</a> map below.<br>
+		Point cloud courtesy of <a href="http://riegl.com/" target="_blank">Riegl</a><br>`);
+	potreeViewer.loadGUI(() => {
+		potreeViewer.setLanguage('en');
+		window.$("#menu_appearance").next().show();
+		window.$("#menu_tools").next().show();
+		window.$("#menu_scene").next().show();
+		potreeViewer.toggleSidebar();
 	});
 	
-	// Point Cloud
-	Potree.loadPointCloud("../pointclouds/PotP1W/metadata.json", "lion", function(e){
-		viewer.scene.addPointCloud(e.pointcloud);
+	Potree.loadPointCloud("http://5.9.65.151/mschuetz/potree/resources/pointclouds/riegl/retz/cloud.js", "Retz", function(e){
+		let scene = potreeViewer.scene;
 		
+		scene.addPointCloud(e.pointcloud);
+		
+		e.pointcloud.position.set(569277.402752, 5400050.599046, 0);
+		e.pointcloud.rotation.set(0, 0, -0.035);
 		let material = e.pointcloud.material;
-		material.size = 1;
-		material.pointSizeType = Potree.PointSizeType.ATTENUATED;
+		material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
+		material.size = 0.7;
+		material.elevationRange = [0, 70];
+		material.weightRGB = 1.0;
+		material.weightElevation = 1.0;
 		
-		viewer.fitToScreen();
-	});
-
-	// Creating ambient light for all of the mesh models
-	const light = new THREE.AmbientLight(); // soft white light
-		viewer.scene.scene.add( light );
-
-		// { // ANNOTATIONS
-			
-
-			
-
-		// 	let aSanSimeon = new Potree.Annotation({
-		// 		title: "San Simeon",
-		// 		position: [664147.50, 3946008.73, 16.30],
-		// 		cameraPosition: [664941.80, 3943568.06, 1925.30],
-		// 		cameraTarget: [664147.50, 3946008.73, 16.30],
-		// 	});
-		// 	aCA13.add(aSanSimeon);
-
-		// 	let aHearstCastle = new Potree.Annotation({
-		// 		title: "Hearst Castle",
-		// 		position: [665744.56, 3950567.52, 500.48],
-		// 		cameraPosition: [665692.66, 3950521.65, 542.02],
-		// 		cameraTarget: [665744.56, 3950567.52, 500.48],
-		// 	});
-		// 	aCA13.add(aHearstCastle);
-
-		// 	let aMorroBay = new Potree.Annotation({
-		// 		title: "Morro Bay",
-		// 		position: [695483.33, 3916430.09, 25.75],
-		// 		cameraPosition: [694114.65, 3911176.26, 3402.33],
-		// 		cameraTarget: [695483.33, 3916430.09, 25.75],
-		// 	});
-		// 	aCA13.add(aMorroBay);
-
-		// 	let aMorroRock = new Potree.Annotation({
-		// 		title: "Morro Rock",
-		// 		position: [693729.66, 3916085.19, 90.35],
-		// 		cameraPosition: [693512.77, 3915375.61, 342.33],
-		// 		cameraTarget: [693729.66, 3916085.19, 90.35],
-		// 	});
-		// 	aMorroBay.add(aMorroRock);
-
-		// 	let aMorroBayMutualWaterCo = new Potree.Annotation({
-		// 		title: "Morro Bay Mutual Water Co",
-		// 		position: [694699.45, 3916425.75, 39.78],
-		// 		cameraPosition: [694377.64, 3916289.32, 218.40],
-		// 		cameraTarget: [694699.45, 3916425.75, 39.78],
-		// 	});
-		// 	aMorroBay.add(aMorroBayMutualWaterCo);
-
-		// 	let aLilaKeiserPark = new Potree.Annotation({
-		// 		title: "Lila Keiser Park",
-		// 		position: [694674.99, 3917070.49, 10.86],
-		// 		cameraPosition: [694452.59, 3916845.14, 298.64],
-		// 		cameraTarget: [694674.99, 3917070.49, 10.86],
-		// 	});
-		// 	aMorroBay.add(aLilaKeiserPark);
-
-		// 	let aSanLuisObispo = new Potree.Annotation({
-		// 		title: "San Luis Obispo",
-		// 		position: [712573.39, 3907588.33, 146.44],
-		// 		cameraPosition: [711158.29, 3907019.82, 1335.89],
-		// 		cameraTarget: [712573.39, 3907588.33, 146.44],
-		// 	});
-		// 	aCA13.add(aSanLuisObispo);
-
-		// 	let aLopezHill = new Potree.Annotation({
-		// 		title: "Lopez Hill",
-		// 		position: [728635.63, 3895761.56, 456.33],
-		// 		cameraPosition: [728277.24, 3895282.29, 821.51],
-		// 		cameraTarget: [728635.63, 3895761.56, 456.33],
-		// 	});
-		// 	aCA13.add(aLopezHill);
-
-		// 	let aWhaleRockReservoir = new Potree.Annotation({
-		// 		title: "Whale Rock Reservoir",
-		// 		position: [692845.46, 3925528.53, 140.91],
-		// 		cameraPosition: [693073.32, 3922354.02, 2154.17],
-		// 		cameraTarget: [692845.46, 3925528.53, 140.91],
-		// 	});
-		// 	aCA13.add(aWhaleRockReservoir);
-
-		// }
-
-		// { // TREE RETURNS POI - ANNOTATION & VOLUME
-		// 	let aRoot = scene.annotations;
-
-		// 	let elTitle = $(`
-		// 	<span>
-		// 		Tree Returns:
-		// 		<img name="action_return_number" src="${Potree.resourcePath}/icons/return_number.svg" class="annotation-action-icon"/>
-		// 		<img name="action_rgb" src="${Potree.resourcePath}/icons/rgb.png" class="annotation-action-icon"/>
-		// 	</span>`);
-
-		// 	elTitle.find("img[name=action_return_number]").click( () => {
-		// 		event.stopPropagation();
-		// 		material.activeAttributeName = "return_number";
-		// 		material.pointSizeType = Potree.PointSizeType.FIXED;
-		// 		material.size = 5;
-		// 		potreeViewer.setClipTask(Potree.ClipTask.SHOW_INSIDE);
-		// 	});
-			
-		// 	elTitle.find("img[name=action_rgb]").click( () => {
-		// 		event.stopPropagation();
-		// 		material.activeAttributeName = "rgba";
-		// 		material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
-		// 		material.size = 1;
-		// 		potreeViewer.setClipTask(Potree.ClipTask.HIGHLIGHT);
-		// 	});
-
-		// 	elTitle.toString = () => "Tree Returns";
-			
-
-		// 	let aTreeReturns = new Potree.Annotation({
-		// 		title: elTitle,
-		// 		position: [675756.75, 3937590.94, 80.21],
-		// 		cameraPosition: [675715.78, 3937700.36, 115.95],
-		// 		cameraTarget: [675756.75, 3937590.94, 80.21],
-		// 	});
-		// 	aRoot.add(aTreeReturns);
-		// 	aTreeReturns.domElement.find(".annotation-action-icon:first").css("filter", "invert(1)");
-
-		// 	let volume = new Potree.BoxVolume();
-		// 	volume.position.set(675755.4039368022, 3937586.911614576, 85);
-		// 	volume.scale.set(119.87189835418388, 68.3925257233834, 51.757483718373265);
-		// 	volume.rotation.set(0, 0, 0.8819755090987993, "XYZ");
-		// 	volume.clip = true;
-		// 	volume.visible = false;
-		// 	volume.name = "Trees";
-		// 	scene.addVolume(volume);
-		// }
-
-	// Root Annotation
-	let aRoot = viewer.scene.annotations;
-
-
-	// Temple of Antoninus and Faustina
-	loader.load(Potree.resourcePath + "../models/toaf.ply", (geometry) => {
-		const textureLoader = new THREE.TextureLoader();
-
-		const diffuseMap = textureLoader.load(Potree.resourcePath + "../models/toaf_tex.jpg");
-		diffuseMap.encoding = THREE.sRGBEncoding;
-
-		const normalMap = textureLoader.load(Potree.resourcePath + "../models/toaf_norm.jpg");
-		normalMap.encoding = THREE.sRGBEncoding;
-
-		geometry.computeVertexNormals();
-
-		let mesh;
+		scene.view.position.set(570975.577, 5398630.521, 1659.311);
+		scene.view.lookAt(570115.285, 5400866.092, 30.009);
 		{
-			const material = new THREE.MeshStandardMaterial({
-				color: 0xffffff,
-				roughness: 0.5,
-				map: diffuseMap,
-				normalMap: normalMap,
-				normalMapType: THREE.ObjectSpaceNormalMap,
+			let aTownHall = new Potree.Annotation({
+				position: [569879.768, 5400886.182, 80.691],
+				title: "Town Hall",
+				cameraPosition: [569955.329, 5400822.949, 98.807],
+				cameraTarget: [569879.768, 5400886.182, 46.691]
 			});
-			mesh = new THREE.Mesh(geometry, material);
-			mesh.position.set(48.5, 238.5, -13);
-			mesh.rotation.set(0, 0, -Math.PI * .19);
-			mesh.visible = false;
-
-			viewer.scene.scene.add(mesh);
+			scene.annotations.add(aTownHall);
+			let aTrainStation = new Potree.Annotation({
+				position: [570337.407, 5400522.730, 30],
+				title: "Train Station",
+				cameraPosition: [570377.074, 5400427.884, 100.576],
+				cameraTarget: [570337.407, 5400522.730, 18.595]
+			});
+			scene.annotations.add(aTrainStation);
+			{ // Attribute Selector Annotation
+				// Create title element with jquery
+				let elTitle = window.$(`
+					<span>
+						Attribute:
+						<img title="Elevation" name="action_elevation" src="window.${Potree.resourcePath}/icons/profile.svg" class="annotation-action-icon"/>
+						<img title="RGB and Elevation" name="action_both" src="window.${Potree.resourcePath}/icons/rgb_elevation.png" class="annotation-action-icon"/>
+						<img title="RGB" name="action_rgb" src="window.${Potree.resourcePath}/icons/rgb.svg" class="annotation-action-icon"/>
+					</span>`);
+				elTitle.find("img[name=action_elevation]").click( () => {
+					scene.pointclouds.forEach( pc => pc.material.activeAttributeName = "elevation" );
+				});
+				elTitle.find("img[name=action_rgb]").click( () => {
+					scene.pointclouds.forEach( pc => pc.material.activeAttributeName = "rgba" );
+				});
+				elTitle.find("img[name=action_both]").click( () => {
+					scene.pointclouds.forEach( pc => pc.material.activeAttributeName = "composite" );
+				});
+				// Give the annotation a meaningful string representation for the sidebar
+				elTitle.toString = () => "Color Setting";
+				// Same as with other annotations, except title is a jquery object this time.
+				let aActions = new Potree.Annotation({
+					position: [569222.340, 5401213.625, 227],
+					title: elTitle
+				});
+				scene.annotations.add(aActions);
+			}
+			{ // Attribute Selector Annotation
+				let elTitle = window.$(`
+					<span>
+						Quality:
+						<span name="low"  style="font-family: monospace; margin-left: 4px">low</span>
+						<span name="med"  style="font-family: monospace; margin-left: 4px">med</span>
+						<span name="high" style="font-family: monospace; margin-left: 4px">high</span>
+					</span>`);
+				
+				elTitle.find("span").mouseover( (e) => {
+					window.$(e.target).css("filter", "drop-shadow(0px 0px 1px white)");
+				}).mouseout( (e) => {
+					window.$(e.target).css("filter", "");
+				});
+				elTitle.find("span[name=low]").click( () => {
+					potreeViewer.setPointBudget(1_000_000);
+					potreeViewer.useHQ = false;
+				});
+				elTitle.find("span[name=med]").click( () => {
+					potreeViewer.setPointBudget(3_000_000);
+					potreeViewer.useHQ = false;
+				});
+				elTitle.find("span[name=high]").click( () => {
+					potreeViewer.setPointBudget(4_000_000);
+					potreeViewer.useHQ = true;
+				});
+				// Give the annotation a meaningful string representation for the sidebar
+				elTitle.toString = () => "Quality Setting";
+				// Same as with other annotations, except title is a jquery object this time.
+				let aActions = new Potree.Annotation({
+					position: [570274.902, 5401873.626, 227],
+					title: elTitle
+				});
+				scene.annotations.add(aActions);
+			}
 		}
-
-		viewer.onGUILoaded(() => {
-			// Add entries to object list in sidebar
-			let tree = _(`#jstree_scene`);
-			let parentNode = "other";
-
-			let meshID = tree.jstree('create_node', parentNode, {
-				"text": "Temple of Antoninus and Faustina",
-				"icon": `${Potree.resourcePath}/icons/triangle.svg`,
-				"data": geometry
-			},
-				"last", false, false);
-			tree.jstree(mesh.visible ? "check_node" : "uncheck_node", meshID);
-
-		});
-
-		// Annotations
-		let aToaf = new Potree.Annotation({
-			title: "Temple of Antoninus and Faustina",
-			position: [48.5, 238.5, 10],
-			cameraPosition: [80, 220, 10],
-			cameraTarget: [51, 236, 0],
-			collapseThreshold: 2000,
-
-		});
-		aToaf.addEventListener('click', () => {
-			mesh.visible = true;
-			console.log(aToaf)
-		})
-		aRoot.add(aToaf);
-
-		let toafPillars = new Potree.Annotation({
-			title: "Cool Pillars",
-			position: [53, 224, -2],
-			cameraPosition: [57, 221, -2],
-			cameraTarget: [53, 224, -2],
-		});
-		aToaf.add(toafPillars);
-
-		let toafStairs = new Potree.Annotation({
-			title: "Old Stairs",
-			position: [60, 230, -10],
-			cameraPosition: [80, 220, 10],
-			cameraTarget: [60, 230, -10],
-		});
-		aToaf.add(toafStairs);
-	});
-
-	// Temple of Castor and Pollux
-	loader.load(Potree.resourcePath + "../models/tocap.ply", (geometry) => {
-		const textureLoader = new THREE.TextureLoader();
-
-		const diffuseMap = textureLoader.load(Potree.resourcePath + "../models/tocap_tex.jpg");
-		diffuseMap.encoding = THREE.sRGBEncoding;
-
-		const normalMap = textureLoader.load(Potree.resourcePath + "../models/tocap_norm.jpg");
-		normalMap.encoding = THREE.sRGBEncoding;
-
-		geometry.computeVertexNormals();
-
-		let mesh;
+		
+		//let pointcloudProjection = e.pointcloud.projection;
+		let pointcloudProjection = "+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
+		let mapProjection = proj4.defs("WGS84");
+		window.toMap = proj4(pointcloudProjection, mapProjection);
+		window.toScene = proj4(mapProjection, pointcloudProjection);
+		
 		{
-			const material = new THREE.MeshStandardMaterial({
-				color: 0xffffff,
-				roughness: 0.5,
-				map: diffuseMap,
-				normalMap: normalMap,
-				normalMapType: THREE.ObjectSpaceNormalMap,
-			});
-			mesh = new THREE.Mesh(geometry, material);
-			mesh.position.set(104.3, 160.1, -13);
-			mesh.rotation.set(0, 0, -Math.PI * .155) //
-
-			viewer.scene.scene.add(mesh);
+			let bb = potreeViewer.getBoundingBox();
+			let minWGS84 = proj4(pointcloudProjection, mapProjection, bb.min.toArray());
+			let maxWGS84 = proj4(pointcloudProjection, mapProjection, bb.max.toArray());
 		}
-
-		viewer.onGUILoaded(() => {
-			// Add entries to object list in sidebar
-			let tree = _(`#jstree_scene`);
-			let parentNode = "other";
-
-			let meshID = tree.jstree('create_node', parentNode, {
-				"text": "Temple of Castor and Pollux",
-				"icon": `${Potree.resourcePath}/icons/triangle.svg`,
-				"data": geometry
-			},
-				"last", false, false);
-			tree.jstree(mesh.visible ? "check_node" : "uncheck_node", meshID);
-
-		});
 	});
-	
-	// Temple of Saturn
-	loader.load(Potree.resourcePath + "../models/tos.ply", (geometry) => {
-		const textureLoader = new THREE.TextureLoader();
-
-		const diffuseMap = textureLoader.load(Potree.resourcePath + "../models/tos_tex.jpg");
-		diffuseMap.encoding = THREE.sRGBEncoding;
-
-		const normalMap = textureLoader.load(Potree.resourcePath + "../models/tos_norm.jpg");
-		normalMap.encoding = THREE.sRGBEncoding;
-
-		geometry.computeVertexNormals();
-
-		let mesh;
-		{
-			const material = new THREE.MeshStandardMaterial({
-				color: 0xffffff,
-				roughness: 0.5,
-				map: diffuseMap,
-				normalMap: normalMap,
-				normalMapType: THREE.ObjectSpaceNormalMap,
-			});
-			mesh = new THREE.Mesh(geometry, material);
-			mesh.position.set(9.2, 30.5, -7);
-			mesh.rotation.set(0, 0, -Math.PI * .69) // 
-
-			viewer.scene.scene.add(mesh);
+	function loop(timestamp){
+		requestAnimationFrame(loop);
+		potreeViewer.update(potreeViewer.clock.getDelta(), timestamp);
+		potreeViewer.render();
+		if(window.toMap !== undefined){
+			{
+				let camera = potreeViewer.scene.getActiveCamera();
+				let pPos		= new THREE.Vector3(0, 0, 0).applyMatrix4(camera.matrixWorld);
+				let pRight  = new THREE.Vector3(600, 0, 0).applyMatrix4(camera.matrixWorld);
+				let pUp		 = new THREE.Vector3(0, 600, 0).applyMatrix4(camera.matrixWorld);
+				let pTarget = potreeViewer.scene.view.getPivot();
+				let toCes = (pos) => {
+					let xy = [pos.x, pos.y];
+					let height = pos.z;
+					let deg = toMap.forward(xy);
+					let cPos = Cesium.Cartesian3.fromDegrees(...deg, height);
+					return cPos;
+				};
+				let cPos = toCes(pPos);
+				let cUpTarget = toCes(pUp);
+				let cTarget = toCes(pTarget);
+				// let cDir = Cesium.Cartesian3.subtract(cTarget, cPos, new Cesium.Cartesian3());
+				// let cUp = Cesium.Cartesian3.subtract(cUpTarget, cPos, new Cesium.Cartesian3());
+				// cDir = Cesium.Cartesian3.normalize(cDir, new Cesium.Cartesian3());
+				// cUp = Cesium.Cartesian3.normalize(cUp, new Cesium.Cartesian3());
+				// cesiumViewer.camera.setView({
+				// 	destination : cPos,
+				// 	orientation : {
+				// 		direction : cDir,
+				// 		up : cUp
+				// 	}
+				// });
+				
+			}
+			let aspect = potreeViewer.scene.getActiveCamera().aspect;
+			if(aspect < 1){
+				let fovy = Math.PI * (potreeViewer.scene.getActiveCamera().fov / 180);
+				cesiumViewer.camera.frustum.fov = fovy;
+			}else{
+				let fovy = Math.PI * (potreeViewer.scene.getActiveCamera().fov / 180);
+				let fovx = Math.atan(Math.tan(0.5 * fovy) * aspect) * 2
+				cesiumViewer.camera.frustum.fov = fovx;
+			}
+			
 		}
-
-		viewer.onGUILoaded(() => {
-			// Add entries to object list in sidebar
-			let tree = _(`#jstree_scene`);
-			let parentNode = "other";
-
-			let meshID = tree.jstree('create_node', parentNode, {
-				"text": "Temple of Saturn",
-				"icon": `${Potree.resourcePath}/icons/triangle.svg`,
-				"data": geometry
-			},
-				"last", false, false);
-			tree.jstree(mesh.visible ? "check_node" : "uncheck_node", meshID);
-
-		});
-	});
-
-	// Temple of Vespasian and Titus
-	loader.load(Potree.resourcePath + "../models/tovat.ply", (geometry) => {
-		const textureLoader = new THREE.TextureLoader();
-
-		const diffuseMap = textureLoader.load(Potree.resourcePath + "../models/tovat_tex.jpg");
-		diffuseMap.encoding = THREE.sRGBEncoding;
-
-		const normalMap = textureLoader.load(Potree.resourcePath + "../models/tovat_norm.jpg");
-		normalMap.encoding = THREE.sRGBEncoding;
-
-		geometry.computeVertexNormals();
-
-		let mesh;
-		{
-			const material = new THREE.MeshStandardMaterial({
-				color: 0xffffff,
-				roughness: 0.5,
-				map: diffuseMap,
-				normalMap: normalMap,
-				normalMapType: THREE.ObjectSpaceNormalMap,
-			});
-			mesh = new THREE.Mesh(geometry, material);
-			mesh.position.set(-17.6, 20, -10.5);
-			mesh.rotation.set(0, 0, -Math.PI * 1.69) // 
-
-			viewer.scene.scene.add(mesh);
-		}
-
-		viewer.onGUILoaded(() => {
-			// Add entries to object list in sidebar
-			let tree = _(`#jstree_scene`);
-			let parentNode = "other";
-
-			let meshID = tree.jstree('create_node', parentNode, {
-				"text": "Temple of Vespasian and Titus",
-				"icon": `${Potree.resourcePath}/icons/triangle.svg`,
-				"data": geometry
-			},
-				"last", false, false);
-			tree.jstree(mesh.visible ? "check_node" : "uncheck_node", meshID);
-
-		});
-	});
-
+		cesiumViewer.render();
+	}
+	requestAnimationFrame(loop);
 </script>
