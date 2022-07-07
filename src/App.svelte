@@ -32,6 +32,7 @@
 
 //import PotreeViewer from "./PotreeViewer.svelte";
   	import Title from "./lib/Title.svelte"; // change these
+	import PotreeViewer from "./lib/Potree.svelte";
 	import Test from "./lib/Test.svelte";
 	import Map from "./lib/Map.svelte";
 	import Info from "./lib/Info.svelte";
@@ -65,7 +66,8 @@
 	{#if mapIndex < 0}
 		<Title bind:mapIndex bind:maps/>
 	{:else}
-		<Test bind:mapIndex bind:map={maps[mapIndex]}/> <!--Bruh bind rly be wild-->
+		<PotreeViewer/>
+		<!-- <Test bind:mapIndex bind:map={maps[mapIndex]}/> -->
 		<!-- {#if !showInfo}
 			<Map map = {maps} bind:infoId bind:showInfo bind:mapIndex/>
 		{/if} -->
