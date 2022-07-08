@@ -40,7 +40,7 @@
 	// src="../libs/jstree/jstree.js"
 	// src="../libs/plasio/js/laslaz.js"
 	// src="../libs/Cesium/Cesium.js"
-    import * as Potree from '../build/potree/Potree.js';
+    import * as Potree from '../libs/potree/Potree.js';
 	import * as THREE from 'three';
 	
 	// window.cesiumViewer = new Cesium.Viewer('cesiumContainer', {
