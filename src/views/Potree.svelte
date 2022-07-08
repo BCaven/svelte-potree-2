@@ -13,10 +13,11 @@
 	<link rel="stylesheet" type="text/css" href="../libs/Cesium/Widgets/CesiumWidget/CesiumWidget.css">
 </head>
 
-<body>
-	<!-- INCLUDE ADDITIONAL DEPENDENCIES HERE -->
-	<!-- INCLUDE SETTINGS HERE -->
-	
+<body type="module">
+	<!-- <script src="../potree/potree.js"></script>
+	<script src="../libs/Cesium/Cesium.js"></script>
+	<script src="../libs/three.js/build/three.js"></script> -->
+
 	<div class="potree_container" style="position: absolute; width: 100%; height: 100%; left: 0px; top: 0px; ">
 		
 		<div id="potree_render_area" style="background-image: url('../build/potree/resources/images/background.jpg');">
@@ -24,8 +25,6 @@
 		</div>
 		<div id="potree_sidebar_container"> </div>
 	</div>
-
-</body>
 
 <script>
 
@@ -42,9 +41,12 @@
 	// src="../libs/plasio/js/laslaz.js"
 	// src="../libs/Cesium/Cesium.js"
 
-	import * as Cesium from '../Cesium/Cesium.js'
-    import * as Potree from '../potree/Potree.js';
-	import * as THREE from 'three';
+	// import * as Cesium from 'Cesium';
+    // import * as Potree from '../potree/Potree.js';
+	// import * as THREE from 'three';
+	import Cesium from 'Cesium';
+	import Potree from 'Potree';
+	import THREE from 'three';
 	
 	window.cesiumViewer = new Cesium.Viewer('cesiumContainer', {
 		useDefaultRenderLoop: false,
@@ -58,7 +60,7 @@
 		selectionIndicator: false,
 		timeline: false,
 		navigationHelpButton: false,
-		imageryProvider : Cesium.createOpenStreetMapImageryProvider({url : 'https://a.tile.openstreetmap.org/'}),
+		imageryProvider : new Cesium.OpenStreetMapImageryProvider({url : 'https://a.tile.openstreetmap.org/'}),
 		terrainShadows: Cesium.ShadowMode.DISABLED,
 	});
 
@@ -286,3 +288,7 @@
 
 
 </script>
+
+</body>
+
+
