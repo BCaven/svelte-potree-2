@@ -31,12 +31,12 @@
   */
 
 //import PotreeViewer from "./PotreeViewer.svelte";
-  	import Title from "./lib/Title.svelte"; // change these
-	import PotreeViewer from "./lib/Potree.svelte";
-	import Test from "./lib/Test.svelte";
-	import Map from "./lib/Map.svelte";
-	import Info from "./lib/Info.svelte";
-	import { MapData } from "./lib/MapData.js";
+  	import Title from "./views/Title.svelte"; // change these
+	import PotreeViewer from "./views/Potree.svelte";
+	import Test from "./views/Test.svelte";
+	import Map from "./views/Map.svelte";
+	import Info from "./views/Info.svelte";
+	import { MapData } from "./classes/MapData.js";
 
 	let mapIndex = -1; // -1 means home page
 	let infoId = 0;

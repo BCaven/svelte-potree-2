@@ -42,34 +42,35 @@
 	// src="../libs/plasio/js/laslaz.js"
 	// src="../libs/Cesium/Cesium.js"
 
+	import * as Cesium from '../Cesium/Cesium.js'
     import * as Potree from '../potree/Potree.js';
 	import * as THREE from 'three';
 	
-	// window.cesiumViewer = new Cesium.Viewer('cesiumContainer', {
-	// 	useDefaultRenderLoop: false,
-	// 	animation: false,
-	// 	baseLayerPicker : false,
-	// 	fullscreenButton: false, 
-	// 	geocoder: false,
-	// 	homeButton: false,
-	// 	infoBox: false,
-	// 	sceneModePicker: false,
-	// 	selectionIndicator: false,
-	// 	timeline: false,
-	// 	navigationHelpButton: false,
-	// 	imageryProvider : Cesium.createOpenStreetMapImageryProvider({url : 'https://a.tile.openstreetmap.org/'}),
-	// 	terrainShadows: Cesium.ShadowMode.DISABLED,
-	// });
+	window.cesiumViewer = new Cesium.Viewer('cesiumContainer', {
+		useDefaultRenderLoop: false,
+		animation: false,
+		baseLayerPicker : false,
+		fullscreenButton: false, 
+		geocoder: false,
+		homeButton: false,
+		infoBox: false,
+		sceneModePicker: false,
+		selectionIndicator: false,
+		timeline: false,
+		navigationHelpButton: false,
+		imageryProvider : Cesium.createOpenStreetMapImageryProvider({url : 'https://a.tile.openstreetmap.org/'}),
+		terrainShadows: Cesium.ShadowMode.DISABLED,
+	});
 
-	// let cp = new Cesium.Cartesian3(4303414.154026048, 552161.235598733, 4660771.704035539);
-	// cesiumViewer.camera.setView({
-	// 	destination : cp,
-	// 	orientation: {
-	// 		heading : 10, 
-	// 		pitch : -Cesium.Math.PI_OVER_TWO * 0.5, 
-	// 		roll : 0.0 
-	// 	}
-	// });
+	let cp = new Cesium.Cartesian3(4303414.154026048, 552161.235598733, 4660771.704035539);
+	cesiumViewer.camera.setView({
+		destination : cp,
+		orientation: {
+			heading : 10, 
+			pitch : -Cesium.Math.PI_OVER_TWO * 0.5, 
+			roll : 0.0 
+		}
+	});
 
 	window.potreeViewer = new Potree.Viewer(document.getElementById("potree_render_area"), {
 		useDefaultRenderLoop: false
@@ -250,19 +251,19 @@
 				let cUpTarget = toCes(pUp);
 				let cTarget = toCes(pTarget);
 
-				// let cDir = Cesium.Cartesian3.subtract(cTarget, cPos, new Cesium.Cartesian3());
-				// let cUp = Cesium.Cartesian3.subtract(cUpTarget, cPos, new Cesium.Cartesian3());
+				let cDir = Cesium.Cartesian3.subtract(cTarget, cPos, new Cesium.Cartesian3());
+				let cUp = Cesium.Cartesian3.subtract(cUpTarget, cPos, new Cesium.Cartesian3());
 
-				// cDir = Cesium.Cartesian3.normalize(cDir, new Cesium.Cartesian3());
-				// cUp = Cesium.Cartesian3.normalize(cUp, new Cesium.Cartesian3());
+				cDir = Cesium.Cartesian3.normalize(cDir, new Cesium.Cartesian3());
+				cUp = Cesium.Cartesian3.normalize(cUp, new Cesium.Cartesian3());
 
-				// cesiumViewer.camera.setView({
-				// 	destination : cPos,
-				// 	orientation : {
-				// 		direction : cDir,
-				// 		up : cUp
-				// 	}
-				// });
+				cesiumViewer.camera.setView({
+					destination : cPos,
+					orientation : {
+						direction : cDir,
+						up : cUp
+					}
+				});
 				
 			}
 

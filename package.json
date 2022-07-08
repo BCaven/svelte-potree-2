@@ -23,6 +23,6 @@
   "dependencies": {
     "proj4": "^2.8.0",
     "sveltestrap": "^5.9.0",
-    "three": "^0.141.0"
+    "three": "^0.124.0"
   }
 }

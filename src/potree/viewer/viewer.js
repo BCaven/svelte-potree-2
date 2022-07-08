@@ -1,5 +1,6 @@
 
 import * as THREE from "three";
+// import $ from "jquery-3.1.1";
 import {ClipTask, ClipMethod, CameraMode, LengthUnits, ElevationGradientRepeat} from "../defines.js";
 import {Renderer} from "../PotreeRenderer.js";
 import {PotreeRenderer} from "./PotreeRenderer.js";
@@ -35,6 +36,9 @@ import { VRButton } from '../../libs/three.js/extra/VRButton.js';
 
 import JSON5 from "../../libs/json5-2.1.3/json5.mjs";
 
+var script = document.createElement('script');
+script.src = 'https://code.jquery.com/jquery-3.6.0.min.js';
+document.getElementsByTagName('head')[0].appendChild(script);
 
 export class Viewer extends EventDispatcher{
 	
