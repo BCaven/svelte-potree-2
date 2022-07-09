@@ -4,6 +4,7 @@ import * as THREE from "three";
 import {Action} from "./Actions.js";
 import {Utils} from "./utils.js";
 import {EventDispatcher} from "./EventDispatcher.js";
+import {exports} from "./exports.js"
 
 export class Annotation extends EventDispatcher {
 	constructor (args = {}) {
